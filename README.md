@@ -6,6 +6,8 @@ A web-based application for managing database connection strings securely.
 
 This ASP.NET Web Forms application provides a user-friendly interface to manage and store database connection strings. It includes user authentication and secure storage of connection configurations.
 
+![Overview](Overview1.PNG)
+
 ## Features
 
 - User login and authentication
