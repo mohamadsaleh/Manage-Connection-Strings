@@ -1,0 +1,35 @@
+# ASP.NET Core
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.log
+*.tmp
+*.temp
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+*.log
+*.tmp
+*.temp
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+*.nuspec
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Sensitive XML files
+App_Data/config/ConnectionStrings.xml
+App_Data/config/users.xml
+
+# Other potential sensitive files
+*.xml

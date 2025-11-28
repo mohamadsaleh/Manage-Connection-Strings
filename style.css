@@ -1,0 +1,167 @@
+﻿html, body {
+    /* 1. ارتفاع HTML و BODY باید ۱۰۰٪ ارتفاع viewport (صفحه نمایش) باشد */
+    height: 100%;
+    /* 2. حذف margin پیش‌فرض مرورگر */
+    margin: 0;
+    padding: 0;
+}
+/* --- استایل پایه و مشترک (ظریف‌تر) --- */
+.btnPrimary, .btnSecondary, .btnDanger {
+    display: inline-block;
+    /* کاهش ارتفاع با کم کردن padding عمودی */
+    padding: 6px 10px;
+    margin: 1px;
+    /* کاهش اندازه فونت */
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none !important;
+    cursor: pointer;
+    border-radius: 4px; /* کمی کاهش شعاع مرز */
+    border: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* --- استایل دکمه Primary (اصلی - آبی) --- */
+.btnPrimary {
+    background-color: #007bff;
+    color: white !important;
+    box-shadow: 0 3px 5px rgba(0, 123, 255, 0.15); /* سایه ظریف‌تر */
+}
+
+    .btnPrimary:hover {
+        background-color: #0056b3;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 7px rgba(0, 123, 255, 0.25);
+    }
+.btnInGrid {
+    padding: 4px 8px;
+}
+/* --- استایل دکمه Secondary (ثانویه - خاکستری) --- */
+.btnSecondary {
+    background-color: #6c757d;
+    color: white !important;
+    box-shadow: 0 1px 3px rgba(108, 117, 125, 0.1);
+}
+
+    .btnSecondary:hover {
+        background-color: #5a6268;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 5px rgba(108, 117, 125, 0.2);
+    }
+.btnDanger {
+    /* رنگ اصلی قرمز */
+    background-color: #dc3545;
+    color: white !important;
+    box-shadow: 0 3px 5px rgba(220, 53, 69, 0.15);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+    .btnDanger:hover {
+        /* رنگ قرمز تیره‌تر هنگام هاور */
+        background-color: #c82333;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 7px rgba(220, 53, 69, 0.25);
+    }
+/* --- استایل دکمه Disabled (اختیاری) --- */
+input[type="submit"]:disabled, input[type="button"]:disabled, .btnDisabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+
+
+/* --- تنظیمات پایه برای خوانایی بهتر --- */
+body {
+    font-family: Tahoma, sans-serif; /* فونت ساده و خوانا */
+    color: #333;
+    line-height: 1.6; /* فاصله بین خطوط برای راحتی مطالعه */
+}
+
+/* --- استایل برای لینک‌های معمولی --- */
+a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+    a:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+
+/* --- استایل عنوان‌ها --- */
+h1, h2, h3 {
+    color: #4a4a4a;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-top: 20px;
+}
+
+/* --- استایل ورودی‌های متنی ASP.NET (TextBox و TextBox MultiLine) --- */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea {
+    padding: 6px 10px;
+    margin: 5px 0;
+    font-size: 12px;
+    border: 1px solid #ddd; /* حاشیه خاکستری روشن و ظریف */
+    border-radius: 4px; /* گوشه‌های گرد ملایم */
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+    /* --- جلوه Hover و Focus (تمرکز) --- */
+    input[type="text"]:focus,
+    textarea:focus {
+        border-color: #007bff; /* حاشیه آبی هنگام فعال بودن */
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); /* سایه ملایم آبی */
+        background-color: #f8f8ff; /* پس‌زمینه بسیار روشن */
+    }
+
+
+/* --- استایل پایه GridView (جدول اصلی) --- */
+.gridViewStyle {
+    border-collapse: collapse;
+    margin: 5px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* سایه بسیار ملایم */
+    background-color: #fff;
+}
+
+    /* --- استایل سربرگ (Header) --- */
+    .gridViewStyle th {
+        background-color: #f0f0f0; /* پس‌زمینه روشن */
+        color: #444; /* متن تیره */
+        padding: 8px 5px;
+        border-bottom: 3px solid #ccc; /* خط جداکننده محکم‌تر */
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    /* --- استایل سلول‌های داده (Data Cells) --- */
+    .gridViewStyle td {
+        padding: 0px 5px;
+        border-bottom: 1px solid #eee; /* خط جداکننده افقی ظریف */
+        font-size: 14px;
+    }
+
+    /* --- استایل سطرهای زوج و فرد (Zebra Stripes) --- */
+    /* سطرهای زوج پس‌زمینه متفاوتی دارند */
+    .gridViewStyle tr:nth-child(even) {
+        background-color: #fafafa;
+    }
+
+    /* --- جلوه Hover روی سطرها --- */
+    .gridViewStyle tr:hover {
+        background-color: #f4faff; /* تغییر رنگ ملایم هنگام عبور ماوس */
+    }
+.headerSection {
+    width: 100%;
+    margin: 0px 0px 3px 0px;
+    color: #fff;
+    background-color: #000;
+    padding: 2px 0px 2px 4px;
+}
