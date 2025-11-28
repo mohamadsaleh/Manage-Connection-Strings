@@ -38,7 +38,7 @@ This ASP.NET Web Forms application provides a user-friendly interface to manage 
    git clone https://github.com/mohamadsaleh/Manage-Connection-Strings.git
    ```
 
-2. Open the solution file `WebSiteTest.sln` in Visual Studio
+2. Open the solution file `WebsiteConnectionStrings.sln` in Visual Studio
 
 3. Restore NuGet packages:
    - Right-click on the solution in Solution Explorer
