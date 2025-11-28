@@ -45,8 +45,38 @@ This ASP.NET Web Forms application provides a user-friendly interface to manage 
    - Select "Restore NuGet Packages"
 
 4. Configure the application:
-   - Sensitive configuration files are gitignored for security
-   - Create `App_Data/config/ConnectionStrings.xml` and `App_Data/config/users.xml` with your configurations
+    - Sensitive configuration files are gitignored for security
+    - Create `App_Data/config/ConnectionStrings.xml` and `App_Data/config/users.xml` with your configurations
+
+### Sample Configuration Files
+
+#### users.xml
+```xml
+<ArrayOfUser xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <User>
+    <UserName>admin</UserName>
+    <Password>admin</Password>
+  </User>
+  <User>
+    <UserName>user1</UserName>
+    <Password>password1</Password>
+  </User>
+</ArrayOfUser>
+```
+
+#### ConnectionStrings.xml
+```xml
+<ArrayOfConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ConnectionString>
+    <ConnectionStringName>DefaultConnection</ConnectionStringName>
+    <ConnectionStringValue>Server=localhost;Database=MyDB;User Id=sa;Password=mypassword;</ConnectionStringValue>
+  </ConnectionString>
+  <ConnectionString>
+    <ConnectionStringName>TestConnection</ConnectionStringName>
+    <ConnectionStringValue>Server=testserver;Database=TestDB;Integrated Security=true;</ConnectionStringValue>
+  </ConnectionString>
+</ArrayOfConnectionString>
+```
 
 5. Build and run the application:
    - Press F5 or click "Start Debugging" in Visual Studio
