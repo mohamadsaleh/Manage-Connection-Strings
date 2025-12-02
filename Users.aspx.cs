@@ -18,6 +18,13 @@ public partial class Users : System.Web.UI.Page
         var userList = SqliteHelper.GetUsers();
         GridViewUsers.DataSource = userList;
         GridViewUsers.DataBind();
+
+        // Populate dropdown list for password change
+        DropDownListUsers.Items.Clear();
+        foreach (var user in userList)
+        {
+            DropDownListUsers.Items.Add(new ListItem(user.UserName, user.UserName));
+        }
     }
 
     protected void ButtonAddUser_Click(object sender, EventArgs e)
@@ -50,5 +57,37 @@ public partial class Users : System.Web.UI.Page
 
         // Refresh the GridView
         Page_PreRender(sender, e);
+    }
+
+    protected void ButtonChangePassword_Click(object sender, EventArgs e)
+    {
+        // Clear previous messages
+        LabelChangePasswordMessage.Text = "";
+        LabelChangePasswordMessage.ForeColor = System.Drawing.Color.Red;
+
+        // Validate inputs
+        if (string.IsNullOrEmpty(DropDownListUsers.SelectedValue))
+        {
+            LabelChangePasswordMessage.Text = "Please select a user.";
+            return;
+        }
+
+        if (string.IsNullOrEmpty(TextBoxNewPassword.Text))
+        {
+            LabelChangePasswordMessage.Text = "Please enter a new password.";
+            return;
+        }
+
+        // Change password directly
+        SqliteHelper.ChangePassword(
+            DropDownListUsers.SelectedValue,
+            TextBoxNewPassword.Text
+        );
+
+        LabelChangePasswordMessage.ForeColor = System.Drawing.Color.Green;
+        LabelChangePasswordMessage.Text = "Password changed successfully!";
+
+        // Clear form field
+        TextBoxNewPassword.Text = "";
     }
 }

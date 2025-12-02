@@ -341,6 +341,30 @@ public static class SqliteHelper
         }
     }
 
+    public static void ChangePassword(string userName, string newPassword)
+    {
+        string dbPath = DatabasePath;
+
+        if (!File.Exists(dbPath))
+        {
+            InitializeDatabase();
+        }
+
+        using (var connection = new System.Data.SQLite.SQLiteConnection("Data Source=" + dbPath + ";Version=3;"))
+        {
+            connection.Open();
+
+            // Update password directly
+            string updateQuery = "UPDATE User SET Password = @NewPassword WHERE UserName = @UserName;";
+            using (var updateCommand = new System.Data.SQLite.SQLiteCommand(updateQuery, connection))
+            {
+                updateCommand.Parameters.AddWithValue("@NewPassword", newPassword);
+                updateCommand.Parameters.AddWithValue("@UserName", userName);
+                updateCommand.ExecuteNonQuery();
+            }
+        }
+    }
+
     public static void SaveConnectionString(ConnectionString connectionString)
     {
         string dbPath = DatabasePath;
