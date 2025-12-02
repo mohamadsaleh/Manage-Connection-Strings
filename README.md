@@ -31,7 +31,6 @@ This ASP.NET Web Forms application provides a complete database management inter
 ### 👥 User Management
 - Admin user management interface
 - User creation and deletion
-- Secure password storage
 
 ## Technologies Used
 
