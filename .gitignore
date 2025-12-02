@@ -41,3 +41,10 @@ App_Data/*.db-wal
 
 # Other potential sensitive files
 *.xml
+
+# Publish files
+*.publishproj
+App_Data/PublishProfiles/
+
+# Temporary files
+stub*.zip
