@@ -14,48 +14,41 @@ public partial class Users : System.Web.UI.Page
     }
     protected void Page_PreRender(object sender, EventArgs e)
     {
-        // اطمینان از اینکه منبع داده null نیست
-        var userList = ConfigManager.Users?.ToList() ?? new List<User>();
+        // Load users from SQLite database
+        var userList = SqliteHelper.GetUsers();
         GridViewUsers.DataSource = userList;
         GridViewUsers.DataBind();
     }
+
     protected void ButtonAddUser_Click(object sender, EventArgs e)
     {
-        // 1. دریافت لیست کاربران موجود
-        List<User> currentUsers = ConfigManager.Users?.ToList() ?? new List<User>();
-
-        // 2. ایجاد و افزودن کاربر جدید
+        // Create new user
         User newUser = new User
         {
             UserName = TextBoxUserName.Text,
             Password = TextBoxPassWord.Text
         };
-        currentUsers.Add(newUser);
 
-        // 3. ذخیره لیست به‌روز شده
-        ConfigManager.SaveConfigs<User>(currentUsers);
+        // Save to SQLite database
+        SqliteHelper.SaveUser(newUser);
 
-        // پاک کردن TextBoxها پس از افزودن
+        // Clear TextBox fields
         TextBoxUserName.Text = "";
         TextBoxPassWord.Text = "";
+
+        // Refresh the GridView
+        Page_PreRender(sender, e);
     }
 
     protected void GridViewUsers_RowDeleting(object sender, GridViewDeleteEventArgs e)
     {
-        // 1. دریافت نام کاربری از کلید داده ردیف انتخاب شده
+        // Get username from the data key of the selected row
         string userNameToDelete = GridViewUsers.DataKeys[e.RowIndex].Value.ToString();
 
-        // 2. دریافت لیست کاربران
-        List<User> currentUsers = ConfigManager.Users?.ToList() ?? new List<User>();
+        // Delete user from SQLite database
+        SqliteHelper.DeleteUser(userNameToDelete);
 
-        // 3. پیدا کردن و حذف کاربر مورد نظر
-        User userToRemove = currentUsers.FirstOrDefault(u => u.UserName == userNameToDelete);
-        if (userToRemove != null)
-        {
-            currentUsers.Remove(userToRemove);
-        }
-
-        // 4. ذخیره لیست به‌روز شده
-        ConfigManager.SaveConfigs<User>(currentUsers);
+        // Refresh the GridView
+        Page_PreRender(sender, e);
     }
 }

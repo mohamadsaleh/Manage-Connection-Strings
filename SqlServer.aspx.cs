@@ -11,14 +11,20 @@ public partial class SqlServer : System.Web.UI.Page
 
     protected void ButtonTestConnection_Click(object sender, EventArgs e)
     {
-        if (TestDatabaseConnection(ListBoxConnectionStrings.SelectedValue))
+        if (!string.IsNullOrEmpty(ListBoxConnectionStrings.SelectedValue))
         {
-            LabelResult.Text = "✅ SUCCESS: Database connection is open and active!";
-        }
-        else
-        {
-            // Error handling is done inside TestDatabaseConnection
-            LabelResult.Text = "❌ FAILURE: Could not open database connection.";
+            int connectionStringId = Convert.ToInt32(ListBoxConnectionStrings.SelectedValue);
+            ConnectionString selectedCon = SqliteHelper.GetConnectionStrings()
+                .FirstOrDefault(c => c.ConnectionStringId == connectionStringId);
+
+            if (selectedCon != null && TestDatabaseConnection(selectedCon.ConnectionStringValue))
+            {
+                LabelResult.Text = "✅ SUCCESS: Database connection is open and active!";
+            }
+            else
+            {
+                LabelResult.Text = "❌ FAILURE: Could not open database connection.";
+            }
         }
     }
     private bool TestDatabaseConnection(string connectionString)
@@ -51,13 +57,33 @@ public partial class SqlServer : System.Web.UI.Page
 
     protected void ButtonExecuteReader_Click(object sender, EventArgs e)
     {
-        GridViewResults.DataSource = DatabaseHelper.GetDataWithAdapter(ListBoxConnectionStrings.SelectedValue, TextBoxQuery.Text);
-        GridViewResults.DataBind();
+        if (!string.IsNullOrEmpty(ListBoxConnectionStrings.SelectedValue))
+        {
+            int connectionStringId = Convert.ToInt32(ListBoxConnectionStrings.SelectedValue);
+            ConnectionString selectedCon = SqliteHelper.GetConnectionStrings()
+                .FirstOrDefault(c => c.ConnectionStringId == connectionStringId);
+
+            if (selectedCon != null)
+            {
+                GridViewResults.DataSource = DatabaseHelper.GetDataWithAdapter(selectedCon.ConnectionStringValue, TextBoxQuery.Text);
+                GridViewResults.DataBind();
+            }
+        }
     }
 
     protected void ButtonSqaler_Click(object sender, EventArgs e)
     {
-        LabelQueryResult.Text = "Result: " + DatabaseHelper.GetStringWithAdapter(ListBoxConnectionStrings.SelectedValue, TextBoxQuery.Text);
+        if (!string.IsNullOrEmpty(ListBoxConnectionStrings.SelectedValue))
+        {
+            int connectionStringId = Convert.ToInt32(ListBoxConnectionStrings.SelectedValue);
+            ConnectionString selectedCon = SqliteHelper.GetConnectionStrings()
+                .FirstOrDefault(c => c.ConnectionStringId == connectionStringId);
+
+            if (selectedCon != null)
+            {
+                LabelQueryResult.Text = "Result: " + DatabaseHelper.GetStringWithAdapter(selectedCon.ConnectionStringValue, TextBoxQuery.Text);
+            }
+        }
     }
 
 
@@ -101,10 +127,19 @@ public partial class SqlServer : System.Web.UI.Page
 
     protected void ButtonShowTables_Click(object sender, EventArgs e)
     {
-        string showTablesCmd = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES";
-        GridViewTables.DataSource = DatabaseHelper.GetDataWithAdapter(ListBoxConnectionStrings.SelectedValue,
-            showTablesCmd);
-        GridViewTables.DataBind();
+        if (!string.IsNullOrEmpty(ListBoxConnectionStrings.SelectedValue))
+        {
+            int connectionStringId = Convert.ToInt32(ListBoxConnectionStrings.SelectedValue);
+            ConnectionString selectedCon = SqliteHelper.GetConnectionStrings()
+                .FirstOrDefault(c => c.ConnectionStringId == connectionStringId);
+
+            if (selectedCon != null)
+            {
+                string showTablesCmd = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES";
+                GridViewTables.DataSource = DatabaseHelper.GetDataWithAdapter(selectedCon.ConnectionStringValue, showTablesCmd);
+                GridViewTables.DataBind();
+            }
+        }
     }
 
     protected void GridViewTables_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -135,8 +170,18 @@ INNER JOIN
     sys.objects o ON c.object_id = o.object_id
 WHERE
     o.name = '" + tableName + @"'   AND o.type = 'U'";
-                GridViewTableColumns.DataSource = DatabaseHelper.GetDataWithAdapter(ListBoxConnectionStrings.SelectedValue,
-                    getColumnsCmd);
+                if (!string.IsNullOrEmpty(ListBoxConnectionStrings.SelectedValue))
+                {
+                    int connectionStringId = Convert.ToInt32(ListBoxConnectionStrings.SelectedValue);
+                    ConnectionString selectedCon = SqliteHelper.GetConnectionStrings()
+                        .FirstOrDefault(c => c.ConnectionStringId == connectionStringId);
+
+                    if (selectedCon != null)
+                    {
+                        GridViewTableColumns.DataSource = DatabaseHelper.GetDataWithAdapter(selectedCon.ConnectionStringValue, getColumnsCmd);
+                        GridViewTableColumns.DataBind();
+                    }
+                }
                 GridViewTableColumns.DataBind();
                 // 5. چاپ متن استخراج شده در Label
                 LabelResult.Text = "Selected Table: **" + tableName + "** (Row Index: " + rowIndex + ")";
@@ -226,23 +271,41 @@ WHERE
 
     protected void ButtonNonQuery_Click(object sender, EventArgs e)
     {
-        LabelQueryResult.Text = DatabaseHelper.GetNoneWithAdapter(ListBoxConnectionStrings.SelectedValue,
-            TextBoxQuery.Text);
+        if (!string.IsNullOrEmpty(ListBoxConnectionStrings.SelectedValue))
+        {
+            int connectionStringId = Convert.ToInt32(ListBoxConnectionStrings.SelectedValue);
+            ConnectionString selectedCon = SqliteHelper.GetConnectionStrings()
+                .FirstOrDefault(c => c.ConnectionStringId == connectionStringId);
+
+            if (selectedCon != null)
+            {
+                LabelQueryResult.Text = DatabaseHelper.GetNoneWithAdapter(selectedCon.ConnectionStringValue, TextBoxQuery.Text);
+            }
+        }
     }
 
     protected void ButtonAddConnectionString_Click(object sender, EventArgs e)
     {
-        ConnectionString newCon = new ConnectionString();
-        newCon.ConnectionStringName = TextBoxConnectionStringName.Text;
-        newCon.ConnectionStringValue = TextBoxConnectionStringValue.Text;
-        ConnectionString[] consArray = ConfigManager.ConnectionStrings;
+        // Get current user
+        string userName = Session["user"].ToString();
+        User currentUser = SqliteHelper.GetUserByUserName(userName);
 
-        List<ConnectionString> consList = consArray.ToList();
-        consList.Add(newCon);
+        if (currentUser != null)
+        {
+            ConnectionString newCon = new ConnectionString();
+            newCon.ConnectionStringName = TextBoxConnectionStringName.Text;
+            newCon.ConnectionStringValue = TextBoxConnectionStringValue.Text;
+            newCon.Type = "sqlserver";
+            newCon.UserId = currentUser.UserId;
 
-        ConfigManager.SaveConfigs<ConnectionString>(consList);
-        List<ConnectionString> cons = ConfigManager.ConnectionStrings.ToList();
-        BindConnectionStringsToListBox(cons);
+            SqliteHelper.SaveConnectionString(newCon);
+
+            // Refresh the list
+            List<ConnectionString> cons = SqliteHelper.GetConnectionStringsByUserId(currentUser.UserId)
+                .Where(c => c.Type == "sqlserver").ToList();
+            BindConnectionStringsToListBox(cons);
+        }
+
         TextBoxConnectionStringName.Text = "";
         TextBoxConnectionStringValue.Text = "";
     }
@@ -250,9 +313,9 @@ WHERE
     {
         ListBoxConnectionStrings.Items.Clear();
 
-        foreach (ConnectionString item in cons.Where(c => c.Type == "sqlserver"))
+        foreach (ConnectionString item in cons)
         {
-            ListBoxConnectionStrings.Items.Add(new ListItem(item.ConnectionStringName, item.ConnectionStringValue));
+            ListBoxConnectionStrings.Items.Add(new ListItem(item.ConnectionStringName, item.ConnectionStringId.ToString()));
         }
     }
     protected void ButtonDeleteSelectedCon_Click(object sender, EventArgs e)
@@ -261,38 +324,36 @@ WHERE
         {
             return;
         }
-        string selectedValue = ListBoxConnectionStrings.SelectedItem.Value;
-        List<ConnectionString> consList = ConfigManager.ConnectionStrings.ToList();
-        int countRemoved = consList.RemoveAll(
-            c => c.ConnectionStringValue == selectedValue
-        );
 
-        if (countRemoved > 0)
+        int connectionStringId = Convert.ToInt32(ListBoxConnectionStrings.SelectedValue);
+        SqliteHelper.DeleteConnectionString(connectionStringId);
+
+        // Get current user and refresh the list
+        string userName = Session["user"].ToString();
+        User currentUser = SqliteHelper.GetUserByUserName(userName);
+        if (currentUser != null)
         {
-            ConfigManager.SaveConfigs<ConnectionString>(consList);
-            BindConnectionStringsToListBox(consList);
+            List<ConnectionString> cons = SqliteHelper.GetConnectionStringsByUserId(currentUser.UserId)
+                .Where(c => c.Type == "sqlserver").ToList();
+            BindConnectionStringsToListBox(cons);
         }
     }
     protected void Page_Load(object sender, EventArgs e)
     {
         ButtonDeleteSelectedCon.Visible = true;
-        ButtonMoveUp.Visible = true;
-        ButtonMoveDown.Visible = true;
+        ButtonMoveUp.Visible = false; // Not relevant for database-stored items
+        ButtonMoveDown.Visible = false; // Not relevant for database-stored items
         ButtonShowTables.Visible = true;
         ButtonTestConnection.Visible = true;
-
     }
     protected void Page_PreRender(object sender, EventArgs e)
     {
         if (string.IsNullOrEmpty(ListBoxConnectionStrings.SelectedValue))
         {
             ButtonDeleteSelectedCon.Visible = false;
-            ButtonMoveUp.Visible = false;
-            ButtonMoveDown.Visible = false;
             ButtonShowTables.Visible = false;
             ButtonTestConnection.Visible = false;
         }
-
     }
     protected void Page_Init(object sender, EventArgs e)
     {
@@ -300,8 +361,17 @@ WHERE
             Response.Redirect("Login.aspx");
         if (!Page.IsPostBack)
         {
-            List<ConnectionString> cons = ConfigManager.ConnectionStrings.ToList();
-            BindConnectionStringsToListBox(cons);
+            // Get current user
+            string userName = Session["user"].ToString();
+            User currentUser = SqliteHelper.GetUserByUserName(userName);
+
+            if (currentUser != null)
+            {
+                // Get connection strings for current user, filtered by type
+                List<ConnectionString> cons = SqliteHelper.GetConnectionStringsByUserId(currentUser.UserId)
+                    .Where(c => c.Type == "sqlserver").ToList();
+                BindConnectionStringsToListBox(cons);
+            }
         }
     }
 

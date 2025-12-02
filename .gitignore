@@ -31,5 +31,13 @@ packages/
 App_Data/config/ConnectionStrings.xml
 App_Data/config/users.xml
 
+# SQLite Database files
+*.db
+*.db-shm
+*.db-wal
+App_Data/*.db
+App_Data/*.db-shm
+App_Data/*.db-wal
+
 # Other potential sensitive files
 *.xml

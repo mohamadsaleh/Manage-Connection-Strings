@@ -318,6 +318,29 @@ public static class SqliteHelper
         }
     }
 
+    public static void DeleteUser(string userName)
+    {
+        string dbPath = DatabasePath;
+
+        if (!File.Exists(dbPath))
+        {
+            InitializeDatabase();
+        }
+
+        using (var connection = new System.Data.SQLite.SQLiteConnection("Data Source=" + dbPath + ";Version=3;"))
+        {
+            connection.Open();
+
+            string query = "DELETE FROM User WHERE UserName = @UserName;";
+
+            using (var command = new System.Data.SQLite.SQLiteCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@UserName", userName);
+                command.ExecuteNonQuery();
+            }
+        }
+    }
+
     public static void SaveConnectionString(ConnectionString connectionString)
     {
         string dbPath = DatabasePath;
