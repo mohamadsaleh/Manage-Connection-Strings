@@ -9,7 +9,7 @@ public partial class Users : System.Web.UI.Page
 {
     protected void Page_Init(object sender, EventArgs e)
     {
-        if (Session["user"] is null)
+        if (Session["user"] == null)
             Response.Redirect("Login.aspx");
     }
     protected void Page_PreRender(object sender, EventArgs e)

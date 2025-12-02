@@ -22,11 +22,11 @@ public static class DatabaseHelper
                 {
                     dataAdapter.Fill(dataTable);
 
-                    Console.WriteLine($"Successfully retrieved {dataTable.Rows.Count} rows.");
+                    Console.WriteLine("Successfully retrieved " + dataTable.Rows.Count + " rows.");
                 }
                 catch (SqlException ex)
                 {
-                    Console.WriteLine($"Database Error: {ex.Message}");
+                    Console.WriteLine("Database Error: " + ex.Message);
                 }
             }
         }
@@ -47,7 +47,7 @@ public static class DatabaseHelper
                 }
                 catch (SqlException ex)
                 {
-                    return $"Database Error retrieving label: {ex.Message}";
+                    return "Database Error retrieving label: " + ex.Message;
                 }
             }
         }
@@ -66,7 +66,7 @@ public static class DatabaseHelper
                 }
                 catch (SqlException ex)
                 {
-                    return $"Database Error retrieving label: {ex.Message}";
+                    return "Database Error retrieving label: " + ex.Message;
                 }
             }
         }

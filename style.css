@@ -96,7 +96,7 @@ h1, h2, h3 {
     color: #4a4a4a;
     border-bottom: 1px solid #eee;
     padding-bottom: 5px;
-    margin-top: 20px;
+    margin-top: 5px;
 }
 
 /* --- استایل ورودی‌های متنی ASP.NET (TextBox و TextBox MultiLine) --- */
@@ -156,7 +156,7 @@ textarea {
 
     /* --- جلوه Hover روی سطرها --- */
     .gridViewStyle tr:hover {
-        background-color: #f4faff; /* تغییر رنگ ملایم هنگام عبور ماوس */
+        background-color: #ccc; /* تغییر رنگ ملایم هنگام عبور ماوس */
     }
 .headerSection {
     width: 100%;

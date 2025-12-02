@@ -13,8 +13,11 @@
     <form id="form1" runat="server">
         <div style="width: 100%; margin: 0px; padding: 2px 25px; background-color: #ccc;">
 
-            <a href="Connections.aspx">Manage Connections</a> | 
-            <a href="Users.aspx">Manage Users</a> | 
+            <a href="SqlServer.aspx">SQL Server Tools</a> |
+            <a href="PostgreSql.aspx">PostgreSQL Tools</a> |
+            <a href="Mysql.aspx">MySQL Tools</a> |
+            <a href="ConnectionStrings.aspx">My Connection Strings</a> |
+            <a href="Users.aspx">Manage Users</a> |
             <asp:LinkButton ID="LinkButtonLogout" runat="server" OnClick="LinkButtonLogout_Click">Logout</asp:LinkButton>
 
         </div>

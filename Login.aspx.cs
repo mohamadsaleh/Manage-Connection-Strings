@@ -21,7 +21,7 @@ public partial class Login : System.Web.UI.Page
             if(item.UserName==TextBoxuserName.Text && item.Password==TextBoxPassword.Text)
             {
                 Session.Add("user", TextBoxuserName.Text);
-                Response.Redirect("Connections.aspx");
+                Response.Redirect("ConnectionStrings.aspx");
 
             }
         }
